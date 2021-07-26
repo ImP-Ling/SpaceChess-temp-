@@ -37,13 +37,13 @@ class Ships:
         move the ship
         '''
         if not self.freeze:
-            cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
-            rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
-            rect.blit(self.surface,(16*self.x,16*self.y))
-            self.x=x
-            self.y=y
-            self.image.blit(self.surface,(16*self.x,16*self.y))
-            return cost
+        cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
+        rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
+        rect.blit(self.surface,(16*self.x,16*self.y))
+        self.x=x
+        self.y=y
+        self.image.blit(self.surface,(16*self.x,16*self.y))
+        return cost
         else:
             print("this {0} is frozen at the moment".format(self))
             #should include more ways to inform the player, unfinished
