@@ -37,13 +37,13 @@ class Ships:
         move the ship
         '''
         if not self.freeze:
-        cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
-        rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
-        rect.blit(self.surface,(16*self.x,16*self.y))
-        self.x=x
-        self.y=y
-        self.image.blit(self.surface,(16*self.x,16*self.y))
-        return cost
+            cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
+            rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
+            rect.blit(self.surface,(16*self.x,16*self.y))
+            self.x=x
+            self.y=y
+            self.image.blit(self.surface,(16*self.x,16*self.y))
+            return cost
         else:
             print("this {0} is frozen at the moment".format(self))
             #should include more ways to inform the player, unfinished
@@ -74,6 +74,7 @@ class Torpedos(Ships):
     '''
     class Torpedos, as an basic example in ships; they have no special power
     small ship at a size of 1x1, or 16x16
+
     '''
     def __init__(self,surface,x,y,player,weapon=0,armour=0):
         super().__init__(self,surface,x,y,player)
@@ -105,9 +106,10 @@ class Destroyers(Ships):
         self.type="Destroyer"
 
 class Cruisers(Ships):
+
     '''
     class Cruisers, a larger ship that can fire lasers and railgun, no special power
-    small ship at 1x2, or 16x32
+    bigger ship at 2x4, or 32x64
     '''
     def __init__(self,surface,x,y,weapon=0,armour=0):
         super.__init__(self,surface,x,y,player)

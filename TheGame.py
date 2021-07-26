@@ -1,5 +1,5 @@
 import pygame
-
+import Ships
     #resolution is 1024x1024
     #64x64
     #x and y means 64x64
