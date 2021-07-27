@@ -78,6 +78,11 @@ class Ships:
         d=math.sqrt((abs(self.x-ship.x))^2+abs(self.y-ship.y)^2)
         return d
 
+    def rotate(self):
+        #rotate the image if on the opponent side
+        if self.player==1:
+            pygame.transform.rotate(self.image,180)
+
 class Torpedos(Ships):
     '''
     class Torpedos, as an basic example in ships; they have no special power
@@ -90,12 +95,13 @@ class Torpedos(Ships):
         self.cost=100
         self.weapon_cost=10
         self.move_cost=5
-        self.image='/ships/Torpedo.png'
+        self.image=pygame.image.load('ships/Torpedo.png')
         self.damage=10
         self.health=15
         self.weapon=0
         self.armour=0
         self.type="Torpedo"
+        self.rotate()
 
 class Destroyers(Ships):
     '''
@@ -108,12 +114,13 @@ class Destroyers(Ships):
         self.cost=500
         self.weapon_cost=50
         self.move_cost=20
-        self.image='/ships/Destroyer.png'
+        self.image=pygame.image.load('ships/Destroyer.png')
         self.damage=25
         self.health=40
         self.weapon=0
         self.armour=0
         self.type="Destroyer"
+        self.rotate()
 
 class Cruisers(Ships):
 
@@ -127,12 +134,13 @@ class Cruisers(Ships):
         self.cost=1000
         self.weapon_cost=100
         self.move_cost=50
-        self.image='/ships/Cruiser.png'
+        self.image=pygame.image.load('ships/Cruiser.png')
         self.damage=50
         self.health=100
         self.weapon=weapon
         self.armour=armour
         self.type="Cruiser"
+        self.rotate()
 
 class Carriers(Ships):
     '''
@@ -145,13 +153,14 @@ class Carriers(Ships):
         self.cost=5000
         self.weapon_cost=100
         self.move_cost=100
-        self.image='/ships/Carrier.png'
+        self.image=pygame.image.load('ships/Carrier.png')
         self.damage=50
         self.health=150
         self.weapon=weapon
         self.armour=armour
         self.type="Carrier"
         self.ships=True
+        self.rotate()
 
     def launch(self):
         if self.ships:
@@ -161,19 +170,19 @@ class Carriers(Ships):
             if x==64:
                 x=63
             ships.append(Torpedos(self.surface,x-1,y,player))
-            ships.append(Torpedos(self.surface,x-1,y+1,player))
-            ships.append(Torpedos(self.surface,x-1,y+2,player))
-            ships.append(Torpedos(self.surface,x-1,y+3,player))
+            ships.append(Torpedos(self.surface,x-1,y-1,player))
+            ships.append(Torpedos(self.surface,x-1,y-2,player))
+            ships.append(Torpedos(self.surface,x-1,y-3,player))
             ships.append(Torpedos(self.surface,x+2,y,player))
-            ships.append(Torpedos(self.surface,x+2,y+1,player))
-            ships.append(Torpedos(self.surface,x+2,y+2,player))
-            ships.append(Torpedos(self.surface,x+2,y+3,player))
+            ships.append(Torpedos(self.surface,x+2,y-1,player))
+            ships.append(Torpedos(self.surface,x+2,y-2,player))
+            ships.append(Torpedos(self.surface,x+2,y-3,player))
             return ships
         else:
             #a way to tell players deployed already
             print('already deployed')
 
-class E_ships(ships):
+class E_ships(Ships):
     '''
     class E-ships, same grade as Cruisers, can fire lasers and railgun, but can also fire up emp
     ship at 2x4,or 32x64
@@ -191,6 +200,7 @@ class E_ships(ships):
         self.weapon=weapon
         self.type="E-ship"
         self.ships=[]
+        self.rotate()
 
     def EMP(self,ships):
          #have to enter a list of ships, but cannot detect(needs further programming)
@@ -204,7 +214,7 @@ class E_ships(ships):
          for item in self.ships:
              self.ships.freeze=False
 
-class Base(ships):
+class Base(Ships):
     '''
     a basic Base class as the home base, cannot move
     Base at 8x4, or 128*64
@@ -215,8 +225,14 @@ class Base(ships):
         self.weapon_cost=150
         self.damage=80
         self.health=500
-        self.image='/ships/HomeBase.png'
+        self.image=pygame.image.load('ships/HomeBase.png')
         self.type="Base"
+        if player==0:
+            self.x=29
+            self.y=6
+        if player==1:
+            self.x=29
+            self.y=62
 
     def move(self,x,y):
         '''
