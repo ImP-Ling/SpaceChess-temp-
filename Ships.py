@@ -3,13 +3,13 @@ a series of ships classes
 '''
 import pygame
 import math
-
+import Graphics
 class Ships:
-    def __init__ (self,surface,x,y,player,weapon=0,armour=0):
+    def __init__ (self,grid,x,y,player,weapon=0,armour=0):
         '''
         initialize Ship class
         '''
-        self.surface=surface
+        self.grid=grid
         self.player=player
         self.x=x
         self.y=y
@@ -25,6 +25,7 @@ class Ships:
         self.armour_type=0
         self.freeze=False
         self.type=None
+        grid.new_ship(self)
         # deleted blit: self.image.blit(self.surface,(16*x,16*y))
     def __str__(self):
         '''
@@ -34,12 +35,13 @@ class Ships:
 
     def move(self,x,y):
         '''
-        move the ship
+        move the ship,return a cost
         '''
         if not self.freeze:
             cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
             #rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
             #rect.blit(self.surface,(16*self.x,16*self.y))
+
             self.x=x
             self.y=y
             #self.image.blit(self.surface,(16*self.x,16*self.y))
@@ -56,12 +58,7 @@ class Ships:
         if self.get_distance(target)<=range:
             target.damage(self.damage,self.weapon_type)
             clock=pygame.time.Clock()
-            if self.weapon_type == 1:
-                i=0
-                while(i<60):
-                    clock.tick(60)
-                    pygame.draw.line(self.surface,(255,0,0),(16*self.x,16*self.y),(16*target.x,16*target.y),int(i/6))
-                    i=i+1
+            grid.attack(self,target)
             # unfinished railgun animation
             return self.weapon_cost
         else:
@@ -89,8 +86,8 @@ class Torpedos(Ships):
     small ship at a size of 1x1, or 16x16
 
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=1
         self.cost=100
         self.weapon_cost=10
@@ -108,8 +105,8 @@ class Destroyers(Ships):
     class Destroyers, a larger ship that cannot fire lasers, no special power
     small ship at 1x2, or 16x32
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=3
         self.cost=500
         self.weapon_cost=50
@@ -128,8 +125,8 @@ class Cruisers(Ships):
     class Cruisers, a larger ship that can fire lasers and railgun, no special power
     bigger ship at 2x4, or 32x64
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=5
         self.cost=1000
         self.weapon_cost=100
@@ -147,8 +144,8 @@ class Carriers(Ships):
     class Carriers, same grade as the cruisers, and have the same weapons like the cruisers, special power is to deploy torpedo ships
     same grade at 2x4 or 32x64
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=5
         self.cost=5000
         self.weapon_cost=100
@@ -187,8 +184,8 @@ class E_ships(Ships):
     class E-ships, same grade as Cruisers, can fire lasers and railgun, but can also fire up emp
     ship at 2x4,or 32x64
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=5
         self.cost=5000
         self.move_cost=50
@@ -219,8 +216,8 @@ class Base(Ships):
     a basic Base class as the home base, cannot move
     Base at 8x4, or 128*64
     '''
-    def __init__(self,surface,x,y,player,weapon=0,armour=0):
-        super().__init__(self,surface,x,y,player)
+    def __init__(self,grid,x,y,player,weapon=0,armour=0):
+        super().__init__(grid,x,y,player)
         self.range=8
         self.weapon_cost=150
         self.damage=80

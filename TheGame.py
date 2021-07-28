@@ -14,6 +14,12 @@ g=Graphics.Grid()
 g.draw_grid()
 b0,b1=g.draw_and_Create_base()
 print("{0}{1}".format(b0,b1))
+s1=Ships.Carriers(g,20,20,0,1,1)
+s2=Ships.Cruisers(g,20,45,1,1,1)
+s1.move(20,40)
+s2.attack(s1)
+g.refresh()
+
 pygame.display.update()
 input()
 
