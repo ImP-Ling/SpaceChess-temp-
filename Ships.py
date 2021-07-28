@@ -25,7 +25,7 @@ class Ships:
         self.armour_type=0
         self.freeze=False
         self.type=None
-        grid.new_ship(self)
+        
         # deleted blit: self.image.blit(self.surface,(16*x,16*y))
     def __str__(self):
         '''
@@ -55,17 +55,17 @@ class Ships:
         '''
         attack the target, containing  animations
         '''
-        if self.get_distance(target)<=range:
-            target.damage(self.damage,self.weapon_type)
+        if self.get_distance(target)<= self.range:
+            target.get_damage(self.damage,self.weapon_type)
             clock=pygame.time.Clock()
-            grid.attack(self,target)
+            self.grid.attack(self,target)
             # unfinished railgun animation
             return self.weapon_cost
         else:
             #unfinished alert
             print("attack of {0} to {1} out of range".format(self,target))
 
-    def damage(self,damage,weapon_type):
+    def get_damage(self,damage,weapon_type):
         if(abs(weapon_type-self.armour_type)==0):
             self.health=self.health-int(damage/2)
         else:
@@ -99,7 +99,7 @@ class Torpedos(Ships):
         self.armour=0
         self.type="Torpedo"
         self.rotate()
-
+        grid.new_ship(self)
 class Destroyers(Ships):
     '''
     class Destroyers, a larger ship that cannot fire lasers, no special power
@@ -118,7 +118,7 @@ class Destroyers(Ships):
         self.armour=0
         self.type="Destroyer"
         self.rotate()
-
+        grid.new_ship(self)
 class Cruisers(Ships):
 
     '''
@@ -138,7 +138,7 @@ class Cruisers(Ships):
         self.armour=armour
         self.type="Cruiser"
         self.rotate()
-
+        grid.new_ship(self)
 class Carriers(Ships):
     '''
     class Carriers, same grade as the cruisers, and have the same weapons like the cruisers, special power is to deploy torpedo ships
@@ -158,6 +158,7 @@ class Carriers(Ships):
         self.type="Carrier"
         self.ships=True
         self.rotate()
+        grid.new_ship(self)
 
     def launch(self):
         if self.ships:
@@ -198,7 +199,7 @@ class E_ships(Ships):
         self.type="E-ship"
         self.ships=[]
         self.rotate()
-
+        grid.new_ship(self)
     def EMP(self,ships):
          #have to enter a list of ships, but cannot detect(needs further programming)
          self.ships.clear()
