@@ -21,8 +21,8 @@ class Ships:
         self.image=None
         self.damage=None
         self.health=None
-        self.weapon_type=0
-        self.armour_type=0
+        self.weapon_type=weapon
+        self.armour_type=armour
         self.freeze=False
         self.type=None
         
@@ -41,10 +41,12 @@ class Ships:
             cost=self.move_cost*(abs(self.x-x)+abs(self.y-y))
             #rect=pygame.draw.rect(self.surface,(255,255,255),self.image.get_rect())
             #rect.blit(self.surface,(16*self.x,16*self.y))
-
+            #self.image.blit(self.surface,(16*self.x,16*self.y))<-- unused coding to blit, now in Graphics.py (class Grid)
             self.x=x
             self.y=y
-            #self.image.blit(self.surface,(16*self.x,16*self.y))
+            self.grid.refresh()
+            self.get_center()
+            
             return cost
         else:
             print("this {0} is frozen at the moment".format(self))
@@ -59,7 +61,7 @@ class Ships:
             target.get_damage(self.damage,self.weapon_type)
             clock=pygame.time.Clock()
             self.grid.attack(self,target)
-            # unfinished railgun animation
+            # unfinished railgun animation <-- now finished
             return self.weapon_cost
         else:
             #unfinished alert
@@ -78,7 +80,7 @@ class Ships:
     def rotate(self):
         #rotate the image if on the opponent side
         if self.player==1:
-            pygame.transform.rotate(self.image,180)
+            self.image=pygame.transform.rotate(self.image,180)
 
 class Torpedos(Ships):
     '''
@@ -88,18 +90,22 @@ class Torpedos(Ships):
     '''
     def __init__(self,grid,x,y,player,weapon=0,armour=0):
         super().__init__(grid,x,y,player)
-        self.range=1
+        self.range=3
         self.cost=100
         self.weapon_cost=10
         self.move_cost=5
         self.image=pygame.image.load('ships/Torpedo.png')
+        self.get_center()
         self.damage=10
         self.health=15
-        self.weapon=0
-        self.armour=0
         self.type="Torpedo"
         self.rotate()
         grid.new_ship(self)
+
+    def get_center(self):
+        self.center_x=self.x+0.5
+        self.center_y=self.y-0.5
+
 class Destroyers(Ships):
     '''
     class Destroyers, a larger ship that cannot fire lasers, no special power
@@ -107,58 +113,68 @@ class Destroyers(Ships):
     '''
     def __init__(self,grid,x,y,player,weapon=0,armour=0):
         super().__init__(grid,x,y,player)
-        self.range=3
+        self.range=6
         self.cost=500
         self.weapon_cost=50
         self.move_cost=20
+        self.get_center()
         self.image=pygame.image.load('ships/Destroyer.png')
         self.damage=25
         self.health=40
-        self.weapon=0
-        self.armour=0
         self.type="Destroyer"
         self.rotate()
         grid.new_ship(self)
+
+    def get_center(self):
+        self.center_x=self.x+0.5
+        self.center_y=self.y-1
+
 class Cruisers(Ships):
 
     '''
     class Cruisers, a larger ship that can fire lasers and railgun, no special power
     bigger ship at 2x4, or 32x64
     '''
-    def __init__(self,grid,x,y,player,weapon=0,armour=0):
-        super().__init__(grid,x,y,player)
-        self.range=5
+    def __init__(self,grid,x,y,player,weapon,armour):
+        super().__init__(grid,x,y,player,weapon,armour)
+        self.range=10
         self.cost=1000
         self.weapon_cost=100
         self.move_cost=50
+        self.get_center()
         self.image=pygame.image.load('ships/Cruiser.png')
         self.damage=50
         self.health=100
-        self.weapon=weapon
-        self.armour=armour
         self.type="Cruiser"
         self.rotate()
         grid.new_ship(self)
+
+    def get_center(self):
+        self.center_x=self.x+1
+        self.center_y=self.y-2
 class Carriers(Ships):
     '''
     class Carriers, same grade as the cruisers, and have the same weapons like the cruisers, special power is to deploy torpedo ships
     same grade at 2x4 or 32x64
     '''
-    def __init__(self,grid,x,y,player,weapon=0,armour=0):
-        super().__init__(grid,x,y,player)
-        self.range=5
+    def __init__(self,grid,x,y,player,weapon,armour):
+        super().__init__(grid,x,y,player,weapon,armour)
+        self.range=10
         self.cost=5000
         self.weapon_cost=100
         self.move_cost=100
+        self.get_center()
         self.image=pygame.image.load('ships/Carrier.png')
         self.damage=50
         self.health=150
-        self.weapon=weapon
-        self.armour=armour
         self.type="Carrier"
         self.ships=True
         self.rotate()
         grid.new_ship(self)
+
+    def get_center(self):
+        self.center_x=self.x+1
+        self.center_y=self.y-2
 
     def launch(self):
         if self.ships:
@@ -185,17 +201,17 @@ class E_ships(Ships):
     class E-ships, same grade as Cruisers, can fire lasers and railgun, but can also fire up emp
     ship at 2x4,or 32x64
     '''
-    def __init__(self,grid,x,y,player,weapon=0,armour=0):
-        super().__init__(grid,x,y,player)
-        self.range=5
+    def __init__(self,grid,x,y,player,weapon,armour):
+        super().__init__(grid,x,y,player,weapon,armour)
+        self.range=10
         self.cost=5000
         self.move_cost=50
         self.weapon_cost=100
+        self.center_x=self.x+1
+        self.center_y=self.y+2
         self.image='/ships/E-ship.png'
         self.damage=50
         self.health=80
-        self.armour=armour
-        self.weapon=weapon
         self.type="E-ship"
         self.ships=[]
         self.rotate()
@@ -219,10 +235,12 @@ class Base(Ships):
     '''
     def __init__(self,grid,x,y,player,weapon=0,armour=0):
         super().__init__(grid,x,y,player)
-        self.range=8
+        self.range=15
         self.weapon_cost=150
         self.damage=80
         self.health=500
+        self.center_x=self.x+4
+        self.center_y=self.y-2
         self.image=pygame.image.load('ships/HomeBase.png')
         self.type="Base"
         if player==0:
