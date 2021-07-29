@@ -102,6 +102,23 @@ class Menu:
        self.font1=pygame.font.SysFont('arial',30)
        self.font2=pygame.font.SysFont('arial',15)
        self.font3=pygame.font.SysFont('comicsans',25)
+       self.undo=None
+       self.attack=None
+       self.deploy=None
+       self.move=None
+       self.torpedo=None
+       self.destroyer=None
+       self.cruiser=None
+       self.carrier=None
+       self.eship=None
+       self.laser=None
+       self.railgun=None
+       self.energy=None
+       self.hard=None
+       self.deploy=None
+       self.special=None
+       self.finish=None
+
     def start_menu(self):
         self.display.blit(self.surface,(1024,0))
         text1=self.font1.render('Space Chess -- Welcome!',True,(0,0,0))
@@ -131,7 +148,7 @@ class Menu:
                 next="M"
         return next
 
-    def in_game_multi_player(self,player0,player1):
+    def in_game_multi_player(self,player0,player1,this_round,chosen=None):
         self.display.blit(self.surface,(1024,0))
         text1=self.font1.render('Space Chess -- Multi Player',True,(0,0,0))
         self.display.blit(text1,(1050,30))
@@ -143,12 +160,86 @@ class Menu:
         self.display.blit(text2,(1050,110))
         text2=self.font2.render('   Thirdly, choose a target.',True,(0,0,0))
         self.display.blit(text2,(1050,130))
+        pygame.display.update()
+
+        #displaying RP
         text3=self.font3.render('Resource Points',True,(255,0,0))
         self.display.blit(text3,(1050,160))
-        text3=self.font3.render('  Player 0: ',True,(0,0,0))
+        text3=self.font3.render('  Player 0: {0}'.format(player0.RP),True,(0,0,0))
         self.display.blit(text3,(1050,185))
-        text3=self.font3.render('  Player 1: ',True,(0,0,0))
+        text3=self.font3.render('  Player 1: {0}'.format(player1.RP),True,(0,0,0))
         self.display.blit(text3,(1050,210))
-        #123
+        pygame.display.update()
+
+
+        #buttons
+        self.undo=Input.Button("--Undo--",(0,0,0),1050,245,self.display)
+        self.undo.display()
+        self.attack=Input.Button("--Attack--",(0,0,0),1050,280,self.display)
+        self.attack.display()
+        self.move=Input.Button("--Move--",(0,0,0),1050,315,self.display)
+        self.move.display()
+
+        #Deploy
+        text4=self.font2.render('Deploy Ships: ( click the icon to choose )',True,(255,0,0))
+        self.display.blit(text4,(1050,350))
+        text4=self.font2.render('Torpedos: D:100,M:5,W:10, 10/15',True,(0,0,0))
+        self.display.blit(text4,(1050,370))
+        self.torpedo=Input.Image('ships/Torpedo.png',1300,370,self.display)
+        self.torpedo.display()
+        text4=self.font2.render('Destroyers: D:500,M:20,W:50, 25/40',True,(0,0,0))
+        self.display.blit(text4,(1050,410))
+        self.destroyer=Input.Image('ships/Destroyer.png',1300,410,self.display)
+        self.destroyer.display()
+        text4=self.font2.render('Cruisers: D:1000,M:50,W:100, 50/100',True,(0,0,0))
+        self.display.blit(text4,(1050,450))
+        self.cruiser=Input.Image('ships/Cruiser.png',1300,450,self.display)
+        self.cruiser.display()
+        text4=self.font2.render('Carriers: D:5000,M:100,W:100, 50/150',True,(0,0,0))
+        self.display.blit(text4,(1050,520))
+        self.carrier=Input.Image('ships/Carrier.png',1300,520,self.display)
+        self.carrier.display()
+        text4=self.font2.render('E-ships: D:5000,M:50,W:100, 50/80',True,(0,0,0))
+        self.display.blit(text4,(1050,590))
+        self.eship=Input.Image('ships/E-ship.png',1300,590,self.display)
+        self.eship.display()
+
+        #choose armour and weapon
+        text4=self.font2.render('Choose Armour and Weapon:',True,(255,0,0))
+        self.display.blit(text4,(1050,630))
+        self.laser=Input.Button("--Laser--",(0,0,0),1050,650,self.display)
+        self.laser.display()
+        self.railgun=Input.Button("--Railgun--",(0,0,0),1200,650,self.display)
+        self.railgun.display()
+        self.energy=Input.Button("--Energy--",(0,0,0),1050,690,self.display)
+        self.energy.display()
+        self.hard=Input.Button("--Hard--",(0,0,0),1200,690,self.display)
+        self.hard.display()
+        self.deploy=Input.Button("--Deploy!--",(0,0,0),1125,730,self.display)
+        self.deploy.display()
+
+        #extras
+        self.special=Input.Button("--Special--",(0,0,0),1200,245,self.display)
+        self.special.display()
+        self.finish=Input.Button("--Finish Round--",(255,0,0),1200,280,self.display)
+        self.finish.display()
+        text1=self.font1.render('Player {0}'.format(this_round),True,(0,0,0))
+        self.display.blit(text1,(1300,190))
+
+        #displays ships
+        if chosen:
+            text4=self.font2.render('Chosen Ship:   {0}'.format(chosen),True,(255,0,0))
+            self.display.blit(text4,(1050,780))
+            text4=self.font2.render('  Damage: {0}'.format(chosen.damage),True,(0,0,0))
+            self.display.blit(text4,(1050,810))
+            text4=self.font2.render('  Health: {0}'.format(chosen.health),True,(0,0,0))
+            self.display.blit(text4,(1050,840))
+            text4=self.font2.render('  Armour: {0}'.format(chosen.armour_type),True,(0,0,0))
+            self.display.blit(text4,(1050,870))
+            text4=self.font2.render('  Weapon: {0}'.format(chosen.weapon_type),True,(0,0,0))
+            self.display.blit(text4,(1050,900))
+
+
+
 
         pygame.display.update()

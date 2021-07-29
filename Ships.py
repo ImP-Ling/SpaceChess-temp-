@@ -227,6 +227,9 @@ class E_ships(Ships):
          #this should be used after one round
          for item in self.ships:
              self.ships.freeze=False
+    def get_center(self):
+        self.center_x=self.x+0.5
+        self.center_y=self.y-1
 
 class Base(Ships):
     '''
