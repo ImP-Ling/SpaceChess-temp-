@@ -194,3 +194,12 @@ def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
 					undo_deploy(menu)
 					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
 					return weapon,armour
+
+def listen3():
+	while True:
+		pygame.event.wait()
+		if pygame.mouse.get_pressed(3)[0]:
+			print("pressed")
+			x,y=pygame.mouse.get_pos()
+			return x,y
+	

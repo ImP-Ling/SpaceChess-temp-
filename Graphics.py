@@ -28,6 +28,13 @@ class Grid:
         Y=16*(64-y)-1
         return Y
 
+    def X_to_x(self,x):
+        X=int((x+1)/16)
+        return X
+    def Y_to_y(self,y):
+        Y=64-int((y+1)/16)
+        return Y
+
     def draw_grid(self):
         self.surface.fill((255,255,255))
         for i in range(0,64):

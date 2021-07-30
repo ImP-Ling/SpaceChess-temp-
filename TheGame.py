@@ -87,4 +87,38 @@ while True:
                     print(val1)
                     ship_to_deploy=val1
                 label2,val2=Input.listen2(g,m,p0,p1,this_round,ship_to_display,label1)
-                input()
+                if label2=="undo":
+                    continue
+                if label2=="move":
+                    x,y=Input.listen3()
+                if label2=="attack":
+                    x,y=Input.listen3()
+                if label2=="change":
+                    continue
+                if label2=="special":
+                    print("unfinished")
+                    #Unfinished special effects
+                if label2==1 or label2==0:
+                    if this_round == 0:
+                        while True:
+                            x,y=Input.listen3()
+                            X=g.X_to_x(x)
+                            Y=g.Y_to_y(y)
+                            for item in g.all_ships:
+                                collide=item.check_click((x,y))
+                                if collide:
+                                    break
+
+                            if Y<10 and not collide:
+                                print(X,Y,val1.label)
+                                if val1.label=="ships/Torpedo.png":
+                                    if p0.RP >=100:
+                                        ship=Ships.Torpedos(g,X,Y,0,label2,val2)
+                                        p0.ships.append(ship)
+                                        p0.RP=p0.RP-ship.cost
+                                        g.refresh()
+                                    else:
+                                        print("not enough RP")
+                                    break
+                                        
+                        
