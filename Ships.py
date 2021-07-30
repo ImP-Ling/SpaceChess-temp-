@@ -14,7 +14,6 @@ class Ships:
         self.x=x
         self.y=y
         self.range=None
-        self.player=player
         self.cost=None
         self.weapon_cost=None
         self.move_cost=None
@@ -81,6 +80,17 @@ class Ships:
         #rotate the image if on the opponent side
         if self.player==1:
             self.image=pygame.transform.rotate(self.image,180)
+
+    def check_click(self,position):
+        WIDTH=self.image.get_width()
+        HEIGHT=self.image.get_height()
+        x_match = position[0] > self.grid.x_to_X(self.x) and position[0] < self.grid.x_to_X(self.x) + WIDTH
+        y_match = position[1] > self.grid.y_to_Y(self.y) and position[1] < self.grid.y_to_Y(self.y) + HEIGHT
+        if x_match and y_match:
+            return True
+        else:
+            return False
+
 
 class Torpedos(Ships):
     '''
@@ -198,8 +208,8 @@ class Carriers(Ships):
 
 class E_ships(Ships):
     '''
-    class E-ships, same grade as Cruisers, can fire lasers and railgun, but can also fire up emp
-    ship at 2x4,or 32x64
+    class E-ships, same grade as Destroyers, can fire lasers and railgun, but can also fire up emp
+    ship at 1x2,or 16x32
     '''
     def __init__(self,grid,x,y,player,weapon,armour):
         super().__init__(grid,x,y,player,weapon,armour)

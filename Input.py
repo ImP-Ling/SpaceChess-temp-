@@ -10,6 +10,7 @@ class Button(object):
 		self.displays=displays
 		self.WIDTH = self.surface.get_width()
 		self.HEIGHT = self.surface.get_height()
+		self.label=text
 
 		if 'centered_x' in kwargs and kwargs['centered_x']:
 			self.x = display_width // 2 - self.WIDTH // 2
@@ -25,7 +26,7 @@ class Button(object):
 		self.displays.blit(self.surface, (self.x, self.y))
 
 	def check_click(self, position):
-		print(position)
+		
 		x_match = position[0] > self.x and position[0] < self.x + self.WIDTH
 		y_match = position[1] > self.y and position[1] < self.y + self.HEIGHT
 
@@ -43,6 +44,8 @@ class Image(Button):
 		self.displays=displays
 		self.WIDTH = self.surface.get_width()
 		self.HEIGHT = self.surface.get_height()
+		self.label=image
+
 
 		if 'centered_x' in kwargs and kwargs['centered_x']:
 			self.x = display_width // 2 - self.WIDTH // 2
@@ -75,3 +78,27 @@ def get_R_mouse_click():
 		return x,y
 	else:
 		return 0,0
+
+
+def listen1(grid,menu):
+	while True:
+		pygame.event.wait()
+		if pygame.mouse.get_pressed(3)[0]:
+			print("pressed")
+			x,y=pygame.mouse.get_pos()
+			if x<=1024 and y<=1024:
+				for item in grid.all_ships:
+					if item.check_click((x,y)):
+						print("{0}  {1} {2}".format(item,x,y))
+						return "ship",item
+			else:
+				#print(menu.buttons)
+				for item in menu.buttons:
+					#print(item)
+					if item.check_click((x,y)):
+						print("{0}{1} {2}".format(item,x,y))
+						print(item.label[0:4])
+						if item.label[0:4]=="ship":
+							return "button",item
+						if item.label=="--Finish Round--":
+							return "finish",item

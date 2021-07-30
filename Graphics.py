@@ -32,7 +32,7 @@ class Grid:
         pygame.draw.line(self.surface,(0,0,0),(1023,0),(1023,1023))
         pygame.draw.line(self.surface,(0,0,0),(0,1023),(1023,1023))
 
-    def draw_and_Create_base(self):
+    def draw_and_create_base(self):
         player0_base=Ships.Base(self,0,0,0)
         player1_base=Ships.Base(self,0,0,1)
         self.all_ships.append(player0_base)
@@ -118,6 +118,7 @@ class Menu:
        self.deploy=None
        self.special=None
        self.finish=None
+       self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
 
     def start_menu(self):
         self.display.blit(self.surface,(1024,0))
@@ -238,8 +239,11 @@ class Menu:
             self.display.blit(text4,(1050,870))
             text4=self.font2.render('  Weapon: {0}'.format(chosen.weapon_type),True,(0,0,0))
             self.display.blit(text4,(1050,900))
-
-
-
-
         pygame.display.update()
+        self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
+
+        
+        return self.buttons 
+
+
+        
