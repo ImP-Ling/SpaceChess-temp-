@@ -73,10 +73,18 @@ while True:
                 is_player0=not is_player0
             m.in_game_multi_player(p0,p1,this_round)
             next_round=False
+            ship_to_display=None
+            ship_to_deploy=None
             # single round
             while not next_round:
-                m.in_game_multi_player(p0,p1,this_round)
-                label1,val=Input.listen1(g,m)
+                m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                label1,val1=Input.listen1(g,m)
                 if label1=="ship":
-                    print(val)
-                    m.in_game_multi_player(p0,p1,this_round,val)
+                    print(val1)
+                    ship_to_display=val1
+                    m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                elif label1=="button":
+                    print(val1)
+                    ship_to_deploy=val1
+                label2,val2=Input.listen2(g,m,p0,p1,this_round,ship_to_display,label1)
+                input()

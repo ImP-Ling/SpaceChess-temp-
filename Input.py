@@ -2,6 +2,11 @@
 this file should include all the controlling bit of the program
 '''
 import pygame
+import Graphics
+
+BLACK=(0,0,0)
+RED=(255,0,0)
+GREEN=(0,255,0)
 
 class Button(object):
 	def __init__(self, text, color, x=None, y=None,displays=None, **kwargs):
@@ -102,3 +107,90 @@ def listen1(grid,menu):
 							return "button",item
 						if item.label=="--Finish Round--":
 							return "finish",item
+
+def undo_deploy(menu):
+	menu.laser_color=BLACK
+	menu.railgun_color=BLACK
+	menu.energy_color=BLACK
+	menu.hard_color=BLACK
+
+
+
+def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
+	while True:
+		pygame.event.wait()
+		if pygame.mouse.get_pressed(3)[0]:
+			print("pressed")
+			x,y=pygame.mouse.get_pos()
+			if x<=1024 and y<=1024:
+				return "change"
+
+
+			if label1=="ship":
+				if menu.undo.check_click((x,y)):
+					print("undo")
+					menu.move_color=BLACK
+					menu.attack_color=BLACK
+					undo_deploy(menu)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return "undo",0
+				elif menu.move.check_click((x,y)):
+					print("move")
+					menu.move_color=RED
+					menu.attack_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return "move",0
+				elif menu.attack.check_click((x,y)):
+					print("attack")
+					menu.move_color=BLACK
+					menu.attack_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return "attack",0
+				elif menu.special.check_click((x,y)):
+					print("special")
+					return "special",0
+				elif menu.finish.check_click((x,y)):
+					print("finish")
+					menu.move_color=BLACK
+					menu.attack_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return "finish",0
+			elif label1=="button":
+				weapon=0
+				armour=0
+				if menu.undo.check_click((x,y)):
+					print("undo")
+					menu.move_color=BLACK
+					menu.attack_color=BLACK
+					undo_deploy(menu)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return "undo",0
+				if menu.laser.check_click((x,y)):
+					print("laser")
+					weapon=1
+					menu.laser_color=RED
+					menu.railgun_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+				if menu.railgun.check_click((x,y)):
+					print("railgun")
+					weapon=0
+					menu.railgun_color=RED
+					menu.laser_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+				if menu.energy.check_click((x,y)):
+					print("energy")
+					armour=1
+					menu.energy_color=RED
+					menu.hard_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+				if menu.hard.check_click((x,y)):
+					print("hard")
+					armour=0
+					menu.hard_color=RED
+					menu.energy_color=BLACK
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+				if menu.deploy.check_click((x,y)):
+					print("deploy")
+					undo_deploy(menu)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					return weapon,armour

@@ -6,6 +6,10 @@ import pygame
 import Ships
 import Input
 
+BLACK=(0,0,0)
+RED=(255,0,0)
+GREEN=(0,255,0)
+
 class Grid:
     '''
     a grid class that automaticaly creates a grid with a surface
@@ -104,21 +108,29 @@ class Menu:
        self.font3=pygame.font.SysFont('comicsans',25)
        self.undo=None
        self.attack=None
+       self.attack_color=BLACK
        self.deploy=None
        self.move=None
+       self.move_color=BLACK
        self.torpedo=None
        self.destroyer=None
        self.cruiser=None
        self.carrier=None
        self.eship=None
        self.laser=None
+       self.laser_color=BLACK
        self.railgun=None
+       self.railgun_color=BLACK
        self.energy=None
+       self.energy_color=BLACK
        self.hard=None
+       self.hard_color=BLACK
        self.deploy=None
+       self.deploy=BLACK
        self.special=None
        self.finish=None
        self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
+       #self.chosen=None
 
     def start_menu(self):
         self.display.blit(self.surface,(1024,0))
@@ -176,9 +188,9 @@ class Menu:
         #buttons
         self.undo=Input.Button("--Undo--",(0,0,0),1050,245,self.display)
         self.undo.display()
-        self.attack=Input.Button("--Attack--",(0,0,0),1050,280,self.display)
+        self.attack=Input.Button("--Attack--",self.attack_color,1050,280,self.display)
         self.attack.display()
-        self.move=Input.Button("--Move--",(0,0,0),1050,315,self.display)
+        self.move=Input.Button("--Move--",self.move_color,1050,315,self.display)
         self.move.display()
 
         #Deploy
@@ -208,13 +220,13 @@ class Menu:
         #choose armour and weapon
         text4=self.font2.render('Choose Armour and Weapon:',True,(255,0,0))
         self.display.blit(text4,(1050,630))
-        self.laser=Input.Button("--Laser--",(0,0,0),1050,650,self.display)
+        self.laser=Input.Button("--Laser--",self.laser_color,1050,650,self.display)
         self.laser.display()
-        self.railgun=Input.Button("--Railgun--",(0,0,0),1200,650,self.display)
+        self.railgun=Input.Button("--Railgun--",self.railgun_color,1200,650,self.display)
         self.railgun.display()
-        self.energy=Input.Button("--Energy--",(0,0,0),1050,690,self.display)
+        self.energy=Input.Button("--Energy--",self.energy_color,1050,690,self.display)
         self.energy.display()
-        self.hard=Input.Button("--Hard--",(0,0,0),1200,690,self.display)
+        self.hard=Input.Button("--Hard--",self.hard_color,1200,690,self.display)
         self.hard.display()
         self.deploy=Input.Button("--Deploy!--",(0,0,0),1125,730,self.display)
         self.deploy.display()
@@ -228,7 +240,7 @@ class Menu:
         self.display.blit(text1,(1300,190))
 
         #displays ships
-        if chosen:
+        if chosen!=None:
             text4=self.font2.render('Chosen Ship:   {0}'.format(chosen),True,(255,0,0))
             self.display.blit(text4,(1050,780))
             text4=self.font2.render('  Damage: {0}'.format(chosen.damage),True,(0,0,0))
@@ -239,6 +251,8 @@ class Menu:
             self.display.blit(text4,(1050,870))
             text4=self.font2.render('  Weapon: {0}'.format(chosen.weapon_type),True,(0,0,0))
             self.display.blit(text4,(1050,900))
+            pygame.display.update()
+            #input()
         pygame.display.update()
         self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
 
