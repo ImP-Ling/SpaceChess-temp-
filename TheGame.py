@@ -3,6 +3,7 @@ import Ships
 import Input
 import Enemy
 import Graphics
+import Player
     #resolution is 1024x1024
     #64x64
     #x and y means 64x64
@@ -12,8 +13,10 @@ import Graphics
 pygame.init()
 g=Graphics.Grid()
 m=Graphics.Menu(g)
+p0=Player.Player(0)
+p1=Player.Player(1)
 m.start_menu()
-m.in_game_multi_player()
+m.in_game_multi_player(p0,p1)
 
 g.draw_grid()
 b0,b1=g.draw_and_Create_base()
