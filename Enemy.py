@@ -10,6 +10,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn import naive_bayes
 from sklearn.metrics import roc_auc_score
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
 
 GAME_INDEX=0
 
@@ -130,26 +132,26 @@ def load_data():
 
     feature_array = dataframe.iloc[:,7:16].values
     label_array1=dataframe.iloc[:,2:7]
-    label_array2=dataframe.iloc[:,16:]
+    label_array2=dataframe.iloc[:,16:29591]
     label_array=pd.concat([label_array1,label_array2],axis=1,ignore_index=True).values
 
     
-    return train_test_split(dataframe, label_array, test_size=0.25, random_state=10,stratify=label_array)
+    return train_test_split(dataframe, label_array, test_size=0.1, random_state=5)
 
 def test_bayes(*data):
     # 导入X、Y的训练集和测试集数据
     X_train, X_test, y_train, y_test = data
-    # 调用先验为高斯分布的朴素贝叶斯GaussianNB
+    
     clf = naive_bayes.GaussianNB()
-    # fit方法拟合数据
+    clf = DecisionTreeRegressor(criterion="mse", max_depth=5)
     clf.fit(X_train, y_train)
     print("bayes:training score:{:.4f}".format(clf.score(X_train, y_train)))
     print("bayes:testing score:{:.4f}".format(clf.score(X_test, y_test)))
-    # predict_proba方法进行预测
+    # ????
     bayes_train_pre = clf.predict_proba(X_train)[:,1]
     bayes_test_pre = clf.predict_proba(X_test)[:,1]
-    # roc_auc_score方法计算预测后的auc评价指标
+   
     auc_train = roc_auc_score(y_train,bayes_train_pre)
     auc_test = roc_auc_score(y_test,bayes_test_pre)
-    print("bayes_auc_train:", auc_train)
-    print("bayes_auc_test:",auc_test)
+    print("auc_train:", auc_train)
+    print("auc_test:",auc_test)
