@@ -128,7 +128,32 @@ class Grid:
                     pygame.draw.circle(self.display,(100,100,255),(self.x_to_X(ship.center_x),self.y_to_Y(ship.center_y)),int(160/60*i),5)
                     pygame.display.update()
                     i=i+1
-                
+
+    def make_list(self):
+        list1=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list1[item.x][item.y]=item.val
+        list2=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list2[item.x][item.y]=item.player
+        list3=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list3[item.x][item.y]=item.health
+        list4=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list4[item.x][item.y]=item.damage
+        list5=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list5[item.x][item.y]=item.range
+        list6=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list6[item.x][item.y]=item.weapon_type
+        list7=[[0 for i in range(65)]for j in range(65)]
+        for item in self.all_ships:
+            list7[item.x][item.y]=item.armour_type        
+        return list1,list2,list3,list4,list5,list6,list7
+
+
 class Menu:
     def __init__(self,grid):
        self.display=grid.display

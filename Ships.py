@@ -117,6 +117,7 @@ class Torpedos(Ships):
         self.type="Torpedo"
         self.rotate()
         grid.new_ship(self)
+        self.val=1
 
     def get_center(self):
         self.center_x=self.x+0.5
@@ -140,6 +141,7 @@ class Destroyers(Ships):
         self.type="Destroyer"
         self.rotate()
         grid.new_ship(self)
+        self.val=2
 
     def get_center(self):
         self.center_x=self.x+0.5
@@ -164,6 +166,7 @@ class Cruisers(Ships):
         self.type="Cruiser"
         self.rotate()
         grid.new_ship(self)
+        self.val=3
 
     def get_center(self):
         self.center_x=self.x+1
@@ -187,6 +190,7 @@ class Carriers(Ships):
         self.ships=True
         self.rotate()
         grid.new_ship(self)
+        self.val=4
 
     def get_center(self):
         self.center_x=self.x+1
@@ -234,6 +238,7 @@ class E_ships(Ships):
         self.rotate()
         grid.new_ship(self)
         self.get_center()
+        self.val=5
     def EMP(self,ships):
          #have to enter a list of ships, but cannot detect(needs further programming)<--done
          self.ships.clear()
@@ -266,6 +271,7 @@ class Base(Ships):
         self.image=pygame.image.load('ships/HomeBase.png')
         self.type="Base"
         self.get_center()
+        self.val=6
         if player==0:
             self.x=29
             self.y=6
@@ -329,4 +335,4 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
             g.refresh()
         else:
             print("not enough RP")
-        
+    return ship
