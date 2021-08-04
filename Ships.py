@@ -14,7 +14,6 @@ class Ships:
         self.x=x
         self.y=y
         self.range=None
-        self.player=player
         self.cost=None
         self.weapon_cost=None
         self.move_cost=None
@@ -82,6 +81,23 @@ class Ships:
         if self.player==1:
             self.image=pygame.transform.rotate(self.image,180)
 
+    def check_click(self,position):
+        WIDTH=self.image.get_width()
+        HEIGHT=self.image.get_height()
+        x_match = position[0] > self.grid.x_to_X(self.x) and position[0] < self.grid.x_to_X(self.x) + WIDTH
+        y_match = position[1] > self.grid.y_to_Y(self.y) and position[1] < self.grid.y_to_Y(self.y) + HEIGHT
+        if x_match and y_match:
+            return True
+        else:
+            return False
+
+
+    def chosen(self):
+        WIDTH=self.image.get_width()
+        HEIGHT=self.image.get_height()
+        pygame.draw.rect(self.grid.display,(255,0,0),(self.grid.x_to_X(self.x),self.grid.y_to_Y(self.y),WIDTH,HEIGHT),5)
+
+
 class Torpedos(Ships):
     '''
     class Torpedos, as an basic example in ships; they have no special power
@@ -101,6 +117,7 @@ class Torpedos(Ships):
         self.type="Torpedo"
         self.rotate()
         grid.new_ship(self)
+        self.val=1
 
     def get_center(self):
         self.center_x=self.x+0.5
@@ -124,6 +141,7 @@ class Destroyers(Ships):
         self.type="Destroyer"
         self.rotate()
         grid.new_ship(self)
+        self.val=2
 
     def get_center(self):
         self.center_x=self.x+0.5
@@ -148,6 +166,7 @@ class Cruisers(Ships):
         self.type="Cruiser"
         self.rotate()
         grid.new_ship(self)
+        self.val=3
 
     def get_center(self):
         self.center_x=self.x+1
@@ -171,6 +190,7 @@ class Carriers(Ships):
         self.ships=True
         self.rotate()
         grid.new_ship(self)
+        self.val=4
 
     def get_center(self):
         self.center_x=self.x+1
@@ -179,18 +199,21 @@ class Carriers(Ships):
     def launch(self):
         if self.ships:
             ships=[]
-            if x==1:
-                x=2
-            if x==64:
-                x=63
-            ships.append(Torpedos(self.surface,x-1,y,player))
-            ships.append(Torpedos(self.surface,x-1,y-1,player))
-            ships.append(Torpedos(self.surface,x-1,y-2,player))
-            ships.append(Torpedos(self.surface,x-1,y-3,player))
-            ships.append(Torpedos(self.surface,x+2,y,player))
-            ships.append(Torpedos(self.surface,x+2,y-1,player))
-            ships.append(Torpedos(self.surface,x+2,y-2,player))
-            ships.append(Torpedos(self.surface,x+2,y-3,player))
+            if self.x==1:
+                self.x=2
+            if self.x==64:
+                self.x=63
+            x=self.x
+            y=self.y
+            player=self.player
+            ships.append(Torpedos(self.grid,x-1,y,player))
+            ships.append(Torpedos(self.grid,x-1,y-1,player))
+            ships.append(Torpedos(self.grid,x-1,y-2,player))
+            ships.append(Torpedos(self.grid,x-1,y-3,player))
+            ships.append(Torpedos(self.grid,x+2,y,player))
+            ships.append(Torpedos(self.grid,x+2,y-1,player))
+            ships.append(Torpedos(self.grid,x+2,y-2,player))
+            ships.append(Torpedos(self.grid,x+2,y-3,player))
             return ships
         else:
             #a way to tell players deployed already
@@ -198,8 +221,8 @@ class Carriers(Ships):
 
 class E_ships(Ships):
     '''
-    class E-ships, same grade as Cruisers, can fire lasers and railgun, but can also fire up emp
-    ship at 2x4,or 32x64
+    class E-ships, same grade as Destroyers, can fire lasers and railgun, but can also fire up emp
+    ship at 1x2,or 16x32
     '''
     def __init__(self,grid,x,y,player,weapon,armour):
         super().__init__(grid,x,y,player,weapon,armour)
@@ -207,26 +230,30 @@ class E_ships(Ships):
         self.cost=5000
         self.move_cost=50
         self.weapon_cost=100
-        self.center_x=self.x+1
-        self.center_y=self.y+2
-        self.image='/ships/E-ship.png'
+        self.image=pygame.image.load('ships/E-ship.png')
         self.damage=50
         self.health=80
         self.type="E-ship"
         self.ships=[]
         self.rotate()
         grid.new_ship(self)
+        self.get_center()
+        self.val=5
     def EMP(self,ships):
-         #have to enter a list of ships, but cannot detect(needs further programming)
+         #have to enter a list of ships, but cannot detect(needs further programming)<--done
          self.ships.clear()
          for item in ships:
+             
              item.freeze=True
              self.ships.append(item)
-         return cost
+         
     def unfreeze(self):
          #this should be used after one round
          for item in self.ships:
-             self.ships.freeze=False
+             item.freeze=False
+    def get_center(self):
+        self.center_x=self.x+0.5
+        self.center_y=self.y-1
 
 class Base(Ships):
     '''
@@ -243,17 +270,69 @@ class Base(Ships):
         self.center_y=self.y-2
         self.image=pygame.image.load('ships/HomeBase.png')
         self.type="Base"
+        self.get_center()
+        self.val=6
         if player==0:
             self.x=29
             self.y=6
         if player==1:
             self.x=29
             self.y=62
+        self.get_center()
 
     def move(self,x,y):
         '''
         having shome fun
         '''
         print("why are u trying to move the home base???")
+    def get_center(self):
+        self.center_x=self.x+4
+        self.center_y=self.y-2
+
         
+def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
+    if label=="ships/Torpedo.png":
+        if p0.RP >=100:
+            ship=Torpedos(g,X,Y,p,label2,val2)
+            p0.ships.append(ship)
+            p0.RP=p0.RP-ship.cost
+            g.refresh()
+        else:
+            print("not enough RP")
         
+    if label=="ships/Destroyer.png":
+        if p0.RP >=500:
+            ship=Destroyers(g,X,Y,p,label2,val2)
+            p0.ships.append(ship)
+            p0.RP=p0.RP-ship.cost
+            g.refresh()
+        else:
+            print("not enough RP")
+        
+    if label=="ships/Cruiser.png":
+        if p0.RP >=1000:
+            ship=Cruisers(g,X,Y,p,label2,val2)
+            p0.ships.append(ship)
+            p0.RP=p0.RP-ship.cost
+            g.refresh()
+        else:
+            print("not enough RP")
+        
+    if label=="ships/Carrier.png":
+        if p0.RP >=5000:
+            ship=Carriers(g,X,Y,p,label2,val2)
+            p0.ships.append(ship)
+            p0.RP=p0.RP-ship.cost
+            g.refresh()
+        else:
+            print("not enough RP")
+        
+    if label=="ships/E-ship.png":
+        if p0.RP >=5000:
+            ship=E_ships(g,X,Y,p,label2,val2)
+            p0.ships.append(ship)
+            p0.RP=p0.RP-ship.cost
+            g.refresh()
+        else:
+            print("not enough RP")
+    return ship
