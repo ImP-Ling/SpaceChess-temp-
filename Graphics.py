@@ -9,7 +9,7 @@ import Input
 BLACK=(0,0,0)
 RED=(255,0,0)
 GREEN=(0,255,0)
-
+GREY=(200,200,200)
 class Grid:
     '''
     a grid class that automaticaly creates a grid with a surface
@@ -38,10 +38,15 @@ class Grid:
     def draw_grid(self):
         self.surface.fill((255,255,255))
         for i in range(0,64):
-            pygame.draw.line(self.surface,(0,0,0),(16*i,0),(16*i,1023))
-            pygame.draw.line(self.surface,(0,0,0),(0,16*i),(1023,16*i))
+            pygame.draw.line(self.surface,(200,200,200),(16*i,0),(16*i,1023))
+            pygame.draw.line(self.surface,(200,200,200),(0,16*i),(1023,16*i))
+            
+                
         pygame.draw.line(self.surface,(0,0,0),(1023,0),(1023,1023))
         pygame.draw.line(self.surface,(0,0,0),(0,1023),(1023,1023))
+
+        pygame.draw.line(self.surface,(255,0,0),(0,16*11),(1023,16*11))
+        pygame.draw.line(self.surface,(255,0,0),(0,16*53),(1023,16*53))
 
     def draw_and_create_base(self):
         player0_base=Ships.Base(self,0,0,0)
@@ -102,6 +107,27 @@ class Grid:
                     pygame.display.update()
                     i=i+1
             self.refresh()
+
+    def del_ship(self,ship2,player):
+        i=0
+        clock=pygame.time.Clock()
+        while(i<60):
+                    clock.tick(60)
+                    pygame.draw.circle(self.display,(255,0,0),(self.x_to_X(ship2.center_x),self.y_to_Y(ship2.center_y)),i)
+                    pygame.display.update()
+                    i=i+1
+        self.all_ships.remove(ship2)
+        player.ships.remove(ship2)
+
+    def EMP(self,ship):
+        i=0
+        clock=pygame.time.Clock()
+        while(i<60):
+                    clock.tick(60)
+                    self.refresh()
+                    pygame.draw.circle(self.display,(100,100,255),(self.x_to_X(ship.center_x),self.y_to_Y(ship.center_y)),int(160/60*i),5)
+                    pygame.display.update()
+                    i=i+1
                 
 class Menu:
     def __init__(self,grid):
@@ -120,10 +146,15 @@ class Menu:
        self.move=None
        self.move_color=BLACK
        self.torpedo=None
+       self.torpedo_color=BLACK
        self.destroyer=None
+       self.destroyer_color=BLACK
        self.cruiser=None
+       self.cruiser_color=BLACK
        self.carrier=None
+       self.carrier_color=BLACK
        self.eship=None
+       self.eship_color=BLACK
        self.laser=None
        self.laser_color=BLACK
        self.railgun=None
@@ -133,8 +164,9 @@ class Menu:
        self.hard=None
        self.hard_color=BLACK
        self.deploy=None
-       self.deploy=BLACK
+       self.deploy_color=BLACK
        self.special=None
+       self.special_color=BLACK
        self.finish=None
        self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
        #self.chosen=None
@@ -203,23 +235,23 @@ class Menu:
         #Deploy
         text4=self.font2.render('Deploy Ships: ( click the icon to choose )',True,(255,0,0))
         self.display.blit(text4,(1050,350))
-        text4=self.font2.render('Torpedos: D:100,M:5,W:10, 10/15',True,(0,0,0))
+        text4=self.font2.render('Torpedos: D:100,M:5,W:10, 10/15',True,self.torpedo_color)
         self.display.blit(text4,(1050,370))
         self.torpedo=Input.Image('ships/Torpedo.png',1300,370,self.display)
         self.torpedo.display()
-        text4=self.font2.render('Destroyers: D:500,M:20,W:50, 25/40',True,(0,0,0))
+        text4=self.font2.render('Destroyers: D:500,M:20,W:50, 25/40',True,self.destroyer_color)
         self.display.blit(text4,(1050,410))
         self.destroyer=Input.Image('ships/Destroyer.png',1300,410,self.display)
         self.destroyer.display()
-        text4=self.font2.render('Cruisers: D:1000,M:50,W:100, 50/100',True,(0,0,0))
+        text4=self.font2.render('Cruisers: D:1000,M:50,W:100, 50/100',True,self.cruiser_color)
         self.display.blit(text4,(1050,450))
         self.cruiser=Input.Image('ships/Cruiser.png',1300,450,self.display)
         self.cruiser.display()
-        text4=self.font2.render('Carriers: D:5000,M:100,W:100, 50/150',True,(0,0,0))
+        text4=self.font2.render('Carriers: D:5000,M:100,W:100, 50/150',True,self.carrier_color)
         self.display.blit(text4,(1050,520))
         self.carrier=Input.Image('ships/Carrier.png',1300,520,self.display)
         self.carrier.display()
-        text4=self.font2.render('E-ships: D:5000,M:50,W:100, 50/80',True,(0,0,0))
+        text4=self.font2.render('E-ships: D:5000,M:50,W:100, 50/80',True,self.eship_color)
         self.display.blit(text4,(1050,590))
         self.eship=Input.Image('ships/E-ship.png',1300,590,self.display)
         self.eship.display()
@@ -235,11 +267,11 @@ class Menu:
         self.energy.display()
         self.hard=Input.Button("--Hard--",self.hard_color,1200,690,self.display)
         self.hard.display()
-        self.deploy=Input.Button("--Deploy!--",(0,0,0),1125,730,self.display)
+        self.deploy=Input.Button("--Deploy!--",self.deploy_color,1125,730,self.display)
         self.deploy.display()
 
         #extras
-        self.special=Input.Button("--Special--",(0,0,0),1200,245,self.display)
+        self.special=Input.Button("--Special--",self.special_color,1200,245,self.display)
         self.special.display()
         self.finish=Input.Button("--Finish Round--",(255,0,0),1200,280,self.display)
         self.finish.display()
