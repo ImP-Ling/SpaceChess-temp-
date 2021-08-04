@@ -60,7 +60,10 @@ while True:
     if m.start_menu()=="S":
         #single player
         print("unfinished")
-
+        X_train, X_test, y_train, y_test = Enemy.load_data()
+        Enemy.test_bayes(X_train, X_test, y_train, y_test)
+    # 输出一个分隔符（美观用）
+        print("-" * 10)
 
     elif m.start_menu()=="M":
         #multi player
@@ -103,7 +106,7 @@ while True:
                 player_RP_before=p1.RP
             round_count=0
             # single round
-            while not next_round and round_count<=5:
+            while not next_round and round_count<=4:
                 round_count=round_count+1
                 lists=[]
                 for item in g.make_list():
@@ -113,19 +116,19 @@ while True:
                 Input.undo_menu(m)
                 Input.unclickable_deploy(m)
                 g.refresh()
-                m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                 label1,val1=Input.listen1(g,m)
                 if label1=="ship":
                     print(val1)
                     ship_to_display=val1
                     val1.chosen()
-                    m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                    m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                 elif label1=="button":
                     print(val1)
                     
                     Input.unclickable_menu(m)
                     Input.undo_deploy(m)
-                    m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                    m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
 
                     if val1.label[6:]=="Torpedo.png":
                         m.torpedo_color=RED
@@ -138,19 +141,19 @@ while True:
                     elif val1.label[6:]=="E-ship.png":
                         m.eship_color=RED
                     
-                    m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                    m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                     ship_to_deploy=val1
                 elif label1=="finish":
                     print("finish")
                     next_round=True
                     continue
-                label2,val2=Input.listen2(g,m,p0,p1,this_round,ship_to_display,label1)
+                label2,val2=Input.listen2(g,m,p0,p1,this_round,ship_to_display,label1,round_count)
                 if label2=="undo":
                     round_count=round_count-1
                     continue
                 if label2=="move":
                     while True:
-                        m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                        m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                         x,y,n=Input.listen3()
                         X=g.X_to_x(x)
                         Y=g.Y_to_y(y)
@@ -187,7 +190,7 @@ while True:
 
                 if label2=="attack":
                     m.attack_color=RED
-                    m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                    m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                     while True:
                         X_backup=val1.x
                         Y_backup=val1.y
@@ -202,7 +205,7 @@ while True:
                                     break
                         backup0=p0.RP
                         backup1=p1.RP
-                        if collide and n==0:
+                        if collide and n==0 and target:
                             if this_round==0 and val1.player==0 and target.player==1 and val1.get_distance(target)<=val1.range:
                                 if p0.RP-val1.weapon_cost<0:
                                     print("insufficient money")
@@ -224,7 +227,7 @@ while True:
                                     g.refresh()
                                 break
 
-                        if collide and n==1:
+                        if collide and n==1 and target:
                             if round_count>5:
                                 break
                             if this_round==0 and val1.player==0 and target.player==1 and val1.get_distance(target)<=val1.range:
@@ -257,6 +260,7 @@ while True:
                                 
                 if label2=="change":
                     #yeah,nothing here :p
+                    round_count=round_count-1
                     continue
                 if label2=="special":
                     backup0=p0.RP
@@ -272,7 +276,7 @@ while True:
                             p1.RP=p1.RP-500
                             launch=False
                             Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
-                        m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                        m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                         if launch:
                             for item in val1.launch():
                                 g.new_ship(item)
@@ -292,7 +296,7 @@ while True:
                             p1.RP=p1.RP-1000
                             launch=True
                             Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
-                        m.in_game_multi_player(p0,p1,this_round,ship_to_display)
+                        m.in_game_multi_player(p0,p1,this_round,ship_to_display,round_count)
                         if launch:
                             EMP=[]
                             for item in g.all_ships:

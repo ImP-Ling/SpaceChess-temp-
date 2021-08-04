@@ -4,9 +4,12 @@ this file should include any algorithm that can make a opponent of the player
 import pandas as pd
 import csv
 import Graphics
+import numpy as np
 from sklearn.preprocessing import StandardScaler
-
-
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn import naive_bayes
+from sklearn.metrics import roc_auc_score
 
 GAME_INDEX=0
 
@@ -81,7 +84,7 @@ def writerow(index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,fun
         writer = csv.writer(csvfile)
         writer.writerows ([[index,round,player,player_RP_before,player_RP_after,ship,weapon,armour,x,y,function,target_type,target_weapon,target_armour,target_x,target_y,special]])
     '''
-
+    '''
     list3=[index0,index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,function,target_x,target_y,special,weapon,armour]
     for row in lists[0]:
         for item in row:
@@ -109,13 +112,44 @@ def writerow(index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,fun
     file.loc[index0]=list3
     file.to_csv("History.csv",index=None)
 
-def preprocess():
-    dataframe=pd.read_csv("History.csv")
-    array = dataframe.values
-    X=array[7:16]
-    Y=array[3:6,16:]
-    scaler=StandardScaler().fit(X)
-    rescaledX=scaler.transform(X)
+    '''
 
-    numpy.set_printoptions(precision=3)
-    print(rescaledX[0:5,:])
+def load_data():
+    dataframe=pd.read_csv("History.csv")
+    #dataframe.drop(['index0'],axis = 1, inplace = True)
+    #dataframe.drop(['index1'],axis = 1, inplace = True)
+    columns = dataframe.columns.tolist()
+    k=0
+    for list in columns:
+        if len(list)<2:
+            print(list)
+            print(k)
+            print(dataframe.iloc[:,k:k+1].values)
+        k=k+1
+
+
+    feature_array = dataframe.iloc[:,7:16].values
+    label_array1=dataframe.iloc[:,2:7]
+    label_array2=dataframe.iloc[:,16:]
+    label_array=pd.concat([label_array1,label_array2],axis=1,ignore_index=True).values
+
+    
+    return train_test_split(dataframe, label_array, test_size=0.25, random_state=10,stratify=label_array)
+
+def test_bayes(*data):
+    # 导入X、Y的训练集和测试集数据
+    X_train, X_test, y_train, y_test = data
+    # 调用先验为高斯分布的朴素贝叶斯GaussianNB
+    clf = naive_bayes.GaussianNB()
+    # fit方法拟合数据
+    clf.fit(X_train, y_train)
+    print("bayes:training score:{:.4f}".format(clf.score(X_train, y_train)))
+    print("bayes:testing score:{:.4f}".format(clf.score(X_test, y_test)))
+    # predict_proba方法进行预测
+    bayes_train_pre = clf.predict_proba(X_train)[:,1]
+    bayes_test_pre = clf.predict_proba(X_test)[:,1]
+    # roc_auc_score方法计算预测后的auc评价指标
+    auc_train = roc_auc_score(y_train,bayes_train_pre)
+    auc_test = roc_auc_score(y_test,bayes_test_pre)
+    print("bayes_auc_train:", auc_train)
+    print("bayes_auc_test:",auc_test)

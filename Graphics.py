@@ -41,7 +41,13 @@ class Grid:
             pygame.draw.line(self.surface,(200,200,200),(16*i,0),(16*i,1023))
             pygame.draw.line(self.surface,(200,200,200),(0,16*i),(1023,16*i))
             
-                
+        font1=pygame.font.SysFont('arial',30)
+        text1=font1.render('Player 0',True,(0,0,0))
+        self.surface.blit(text1,(924,970))
+        text2=font1.render('Player 1',True,(0,0,0))
+        self.surface.blit(text2,(924,20))
+
+
         pygame.draw.line(self.surface,(0,0,0),(1023,0),(1023,1023))
         pygame.draw.line(self.surface,(0,0,0),(0,1023),(1023,1023))
 
@@ -225,7 +231,7 @@ class Menu:
                 next="M"
         return next
 
-    def in_game_multi_player(self,player0,player1,this_round,chosen=None):
+    def in_game_multi_player(self,player0,player1,this_round,chosen=None,count=0):
         self.display.blit(self.surface,(1024,0))
         text1=self.font1.render('Space Chess -- Multi Player',True,(0,0,0))
         self.display.blit(text1,(1050,30))
@@ -246,6 +252,8 @@ class Menu:
         self.display.blit(text3,(1050,185))
         text3=self.font3.render('  Player 1: {0}'.format(player1.RP),True,(0,0,0))
         self.display.blit(text3,(1050,210))
+        text3=self.font3.render('  Count:{}'.format(count),True,(0,0,0))
+        self.display.blit(text3,(1300,250))
         pygame.display.update()
 
 

@@ -74,7 +74,8 @@ class Ships:
             self.health=self.health-damage
 
     def get_distance(self,ship):
-        d=math.sqrt((abs(self.x-ship.x))^2+abs(self.y-ship.y)^2)
+        l=(abs(self.x-ship.x))*(abs(self.x-ship.x))+(abs(self.y-ship.y))*(abs(self.y-ship.y))
+        d=math.sqrt(l)
         return d
 
     def rotate(self):

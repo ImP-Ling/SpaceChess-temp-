@@ -142,7 +142,7 @@ def unclickable_menu(menu):
 	menu.undo_color=BLACK
 	menu.special_color=GREY
 
-def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
+def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1,round):
 	weapon=0
 	armour=0
 	while True:
@@ -160,19 +160,19 @@ def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
 					menu.move_color=BLACK
 					menu.attack_color=BLACK
 					undo_deploy(menu)
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return "undo",0
 				elif menu.move.check_click((x,y)):
 					print("move")
 					menu.move_color=RED
 					menu.attack_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return "move",0
 				elif menu.attack.check_click((x,y)):
 					print("attack")
 					menu.move_color=BLACK
 					menu.attack_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return "attack",0
 				elif menu.special.check_click((x,y)):
 					print("special")
@@ -181,7 +181,7 @@ def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
 					print("finish")
 					menu.move_color=BLACK
 					menu.attack_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return "finish",0
 			elif label1=="button":
 				
@@ -191,37 +191,37 @@ def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
 					menu.move_color=BLACK
 					menu.attack_color=BLACK
 					undo_deploy(menu)
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return "undo",0
 				if menu.laser.check_click((x,y)):
 					print("laser")
 					weapon=1
 					menu.laser_color=RED
 					menu.railgun_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 				if menu.railgun.check_click((x,y)):
 					print("railgun")
 					weapon=0
 					menu.railgun_color=RED
 					menu.laser_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 				if menu.energy.check_click((x,y)):
 					print("energy")
 					armour=1
 					menu.energy_color=RED
 					menu.hard_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 				if menu.hard.check_click((x,y)):
 					print("hard")
 					armour=0
 					menu.hard_color=RED
 					menu.energy_color=BLACK
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 				if menu.deploy.check_click((x,y)):
 					print("deploy")
 					
 					menu.deploy_color=RED
-					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
+					menu.in_game_multi_player(p0,p1,this_round,ship_to_display,round)
 					return weapon,armour
 
 def listen3():
