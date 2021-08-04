@@ -291,6 +291,8 @@ class Base(Ships):
 
         
 def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
+
+    ship=None
     if label=="ships/Torpedo.png":
         if p0.RP >=100:
             ship=Torpedos(g,X,Y,p,label2,val2)
@@ -335,4 +337,5 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
             g.refresh()
         else:
             print("not enough RP")
+    
     return ship
