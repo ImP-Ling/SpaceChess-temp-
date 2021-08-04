@@ -143,6 +143,8 @@ def unclickable_menu(menu):
 	menu.special_color=GREY
 
 def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
+	weapon=0
+	armour=0
 	while True:
 		pygame.event.wait()
 		if pygame.mouse.get_pressed(3)[0]:
@@ -182,8 +184,7 @@ def listen2(grid,menu,p0,p1,this_round,ship_to_display,label1):
 					menu.in_game_multi_player(p0,p1,this_round,ship_to_display)
 					return "finish",0
 			elif label1=="button":
-				weapon=0
-				armour=0
+				
 				
 				if menu.undo.check_click((x,y)):
 					print("undo")

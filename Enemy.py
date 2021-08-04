@@ -13,7 +13,7 @@ GAME_INDEX=0
 def init():
     with open("History.csv","w") as csvfile:
         writer = csv.writer(csvfile)
-        list1=["index0","index1","round","player","player_RP_before","player_RP_after","ship","x","y","function","target_x","target_y","special","weapon","armour"]
+        list1=["index0","index1","r","round","player","player_RP_before","player_RP_after","ship","x","y","function","target_x","target_y","special","weapon","armour"]
         for i in range(65):
             for j in range(65):
                 val=str(i)+"/"+str(j)+"/s"
@@ -59,7 +59,7 @@ def get_index():
     with open("History.csv","r") as csvfile:
         reader = csv.reader(csvfile)
         for line in reader:
-            print(line)
+            #print(line)
             if len(line)>0:
                 if str(line[0])!="index0" :
                     index0=line[0]
@@ -69,16 +69,20 @@ def get_index():
                     index1=0
     return int(index0)+1,int(index1)+1
 
+def get_index0():
+    d=pd.read_csv("History.csv",usecols=["index0"])
+    return len(d)+1
 
-def writerow(index1,round,player,player_RP_before,player_RP_after,ship,x,y,function,target_x,target_y,special,weapon,armour,lists):
-    index0,n=get_index()
+
+def writerow(index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,function,target_x,target_y,special,weapon,armour,lists):
+    index0=get_index0()
     '''
     with open("History.csv","w") as csvfile:
         writer = csv.writer(csvfile)
         writer.writerows ([[index,round,player,player_RP_before,player_RP_after,ship,weapon,armour,x,y,function,target_type,target_weapon,target_armour,target_x,target_y,special]])
     '''
 
-    list3=[index0,index1,round,player,player_RP_before,player_RP_after,ship,x,y,function,target_x,target_y,special,weapon,armour]
+    list3=[index0,index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,function,target_x,target_y,special,weapon,armour]
     for row in lists[0]:
         for item in row:
             list3.append(item)
@@ -108,8 +112,8 @@ def writerow(index1,round,player,player_RP_before,player_RP_after,ship,x,y,funct
 def preprocess():
     dataframe=pd.read_csv("History.csv")
     array = dataframe.values
-    X=array[6:14]
-    Y=array[2:5,15:]
+    X=array[7:16]
+    Y=array[3:6,16:]
     scaler=StandardScaler().fit(X)
     rescaledX=scaler.transform(X)
 

@@ -65,6 +65,7 @@ class Ships:
         else:
             #unfinished alert
             print("attack of {0} to {1} out of range".format(self,target))
+            return 0
 
     def get_damage(self,damage,weapon_type):
         if(abs(weapon_type-self.armour_type)==0):
@@ -164,6 +165,8 @@ class Cruisers(Ships):
         self.damage=50
         self.health=100
         self.type="Cruiser"
+        self.weapon_type=weapon
+        self.armour_type=armour
         self.rotate()
         grid.new_ship(self)
         self.val=3
@@ -191,6 +194,8 @@ class Carriers(Ships):
         self.rotate()
         grid.new_ship(self)
         self.val=4
+        self.weapon_type=weapon
+        self.armour_type=armour
 
     def get_center(self):
         self.center_x=self.x+1

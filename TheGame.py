@@ -101,9 +101,10 @@ while True:
                 player_RP_before=p0.RP
             elif this_round==1:
                 player_RP_before=p1.RP
-
+            round_count=0
             # single round
-            while not next_round:
+            while not next_round and round_count<=5:
+                round_count=round_count+1
                 lists=[]
                 for item in g.make_list():
                     lists.append(item)
@@ -145,6 +146,7 @@ while True:
                     continue
                 label2,val2=Input.listen2(g,m,p0,p1,this_round,ship_to_display,label1)
                 if label2=="undo":
+                    round_count=round_count-1
                     continue
                 if label2=="move":
                     while True:
@@ -167,7 +169,7 @@ while True:
                                     val1.move(X_backup,Y_backup)
                                     print("insufficient RP")
                                 else:
-                                    Enemy.writerow(index,sround,this_round,backup,p0.RP,val1.val,X_backup,Y_backup,0,X,Y,0,0,0,lists)
+                                    Enemy.writerow(index,round_count,sround,this_round,backup,p0.RP,val1.val,X_backup,Y_backup,0,X,Y,0,0,0,lists)
                                     break
                             elif this_round==1:
                                 backup=p1.RP
@@ -177,7 +179,7 @@ while True:
                                     val1.move(X_backup,Y_backup)
                                     print("insufficient RP")
                                 else:
-                                    Enemy.writerow(index,sround,this_round,backup,p1.RP,val1.val,X_backup,Y_backup,0,X,Y,0,0,0,lists)
+                                    Enemy.writerow(index,round_count,sround,this_round,backup,p1.RP,val1.val,X_backup,Y_backup,0,X,Y,0,0,0,lists)
                                     break
                             
                         if m.undo.check_click((x,y)):
@@ -201,49 +203,54 @@ while True:
                         backup0=p0.RP
                         backup1=p1.RP
                         if collide and n==0:
-                            if this_round==0 and val1.player==0 and target.player==1:
+                            if this_round==0 and val1.player==0 and target.player==1 and val1.get_distance(target)<=val1.range:
                                 if p0.RP-val1.weapon_cost<0:
                                     print("insufficient money")
                                     break
                                 p0.RP=p0.RP-val1.attack(target)
-                                Enemy.writerow(index,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                Enemy.writerow(index,round_count,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
                                 if target.health<=0:
                                     g.del_ship(target,p1)
                                     g.refresh()
                                 break
-                            if this_round==1 and val1.player==1 and target.player==0:
+                            if this_round==1 and val1.player==1 and target.player==0 and val1.get_distance(target)<=val1.range:
                                 if p1.RP-val1.weapon_cost<0:
                                     print("insufficient money")
                                     break
                                 p1.RP=p1.RP-val1.attack(target)
-                                Enemy.writerow(index,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
                                 if target.health<=0:
                                     g.del_ship(target,p0)
                                     g.refresh()
                                 break
 
                         if collide and n==1:
-                            if this_round==0 and val1.player==0 and target.player==1:
+                            if round_count>5:
+                                break
+                            if this_round==0 and val1.player==0 and target.player==1 and val1.get_distance(target)<=val1.range:
                                 if p0.RP-val1.weapon_cost<0:
                                     print("insufficient money")
                                     break
                                 p0.RP=p0.RP-val1.attack(target)
-                                Enemy.writerow(index,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                Enemy.writerow(index,round_count,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                round_count=round_count+1
                                 if target.health<=0:
                                     g.del_ship(target,p1)
                                     g.refresh()
                                     
-                            if this_round==1 and val1.player==1 and target.player==0:
+                            if this_round==1 and val1.player==1 and target.player==0 and val1.get_distance(target)<=val1.range:
                                 if p1.RP-val1.weapon_cost<0:
                                     print("insufficient money")
                                     break
                                 p1.RP=p1.RP-val1.attack(target)
-                                Enemy.writerow(index,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,1,target.x,target.y,0,0,0,lists)
+                                round_count=round_count+1
                                 if target.health<=0:
                                     g.del_ship(target,p0)
                                     g.refresh()
                                    
                         if m.undo.check_click((x,y)):
+                            round_count=round_count-1
                             break
                         if not collide and n==0:
                             break
@@ -260,11 +267,11 @@ while True:
                         if this_round==0 and p0.RP>=500:
                             p0.RP=p0.RP-500
                             launch=True
-                            Enemy.writerow(index,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
+                            Enemy.writerow(index,round_count,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
                         elif this_round==1 and p1.RP>=500:
                             p1.RP=p1.RP-500
                             launch=False
-                            Enemy.writerow(index,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
+                            Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
                         m.in_game_multi_player(p0,p1,this_round,ship_to_display)
                         if launch:
                             for item in val1.launch():
@@ -280,11 +287,11 @@ while True:
                         if this_round==0 and p0.RP>=1000:
                             p0.RP=p0.RP-1000
                             launch=True
-                            Enemy.writerow(index,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
+                            Enemy.writerow(index,round_count,sround,this_round,backup0,p0.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
                         elif this_round==1 and p1.RP>=1000:
                             p1.RP=p1.RP-1000
                             launch=True
-                            Enemy.writerow(index,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
+                            Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,val1.val,val1.x,val1.y,0,val1.x,val1.y,1,0,0,lists)
                         m.in_game_multi_player(p0,p1,this_round,ship_to_display)
                         if launch:
                             EMP=[]
@@ -307,18 +314,21 @@ while True:
                                 collide=item.check_click((x,y))
                                 if collide:
                                     break
+                            if m.undo.check_click((x,y)):
+                                round_count=round_count-1
+                                break
                             if x<1024 and y<1024:
                                 if Y<14 and not collide and this_round==0:
                                     print(X,Y,val1.label)
                                     ship=Ships.summon_ship(g,X,Y,label2,val2,val1.label,p0,0)
                                     if ship:
-                                        Enemy.writerow(index,sround,this_round,backup0,p0.RP,ship.val,0,0,2,X,Y,0,label2+1,val2+1,lists)
+                                        Enemy.writerow(index,round_count,sround,this_round,backup0,p0.RP,ship.val,0,0,2,X,Y,0,label2+1,val2+1,lists)
                                     break
                                 if Y>54 and not collide and this_round==1:
                                     print(X,Y,val1.label)
                                     ship=Ships.summon_ship(g,X,Y,label2,val2,val1.label,p1,1)
                                     if ship:
-                                        Enemy.writerow(index,sround,this_round,backup1,p1.RP,ship.val,0,0,2,X,Y,0,label2+1,val2+1,lists)
+                                        Enemy.writerow(index,round_count,sround,this_round,backup1,p1.RP,ship.val,0,0,2,X,Y,0,label2+1,val2+1,lists)
                                     break
 
                 
