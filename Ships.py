@@ -74,7 +74,7 @@ class Ships:
             self.health=self.health-damage
 
     def get_distance(self,ship):
-        l=(abs(self.x-ship.x))*(abs(self.x-ship.x))+(abs(self.y-ship.y))*(abs(self.y-ship.y))
+        l=(abs(self.center_x-ship.center_x))*(abs(self.center_x-ship.center_x))+(abs(self.center_y-ship.center_y))*(abs(self.center_y-ship.center_y))
         d=math.sqrt(l)
         return d
 
@@ -299,7 +299,7 @@ class Base(Ships):
 def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
 
     ship=None
-    if label=="ships/Torpedo.png":
+    if label=="ships/Torpedo.png" or label==1:
         if p0.RP >=100:
             ship=Torpedos(g,X,Y,p,label2,val2)
             p0.ships.append(ship)
@@ -308,7 +308,7 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
         else:
             print("not enough RP")
         
-    if label=="ships/Destroyer.png":
+    if label=="ships/Destroyer.png" or label==2:
         if p0.RP >=500:
             ship=Destroyers(g,X,Y,p,label2,val2)
             p0.ships.append(ship)
@@ -317,7 +317,7 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
         else:
             print("not enough RP")
         
-    if label=="ships/Cruiser.png":
+    if label=="ships/Cruiser.png"or label==3:
         if p0.RP >=1000:
             ship=Cruisers(g,X,Y,p,label2,val2)
             p0.ships.append(ship)
@@ -326,7 +326,7 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
         else:
             print("not enough RP")
         
-    if label=="ships/Carrier.png":
+    if label=="ships/Carrier.png" or label==4:
         if p0.RP >=5000:
             ship=Carriers(g,X,Y,p,label2,val2)
             p0.ships.append(ship)
@@ -335,7 +335,7 @@ def summon_ship(g,X,Y,label2,val2,label,p0,p=0):
         else:
             print("not enough RP")
         
-    if label=="ships/E-ship.png":
+    if label=="ships/E-ship.png"or label==5:
         if p0.RP >=5000:
             ship=E_ships(g,X,Y,p,label2,val2)
             p0.ships.append(ship)

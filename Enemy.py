@@ -108,7 +108,7 @@ def writerow(index1,r,round,player,player_RP_before,player_RP_after,ship,x,y,fun
             list3.append(item)
     for row in lists[6]:
         for item in row:
-            list3.append(item)
+            list3.append(item)      
 
     file=pd.read_csv("History.csv")
     file.loc[index0]=list3
@@ -138,16 +138,18 @@ def load_data():
     
     return train_test_split(dataframe, label_array, test_size=0.1, random_state=5)
 
-def test_bayes(*data):
+def AI(*data):
     # 导入X、Y的训练集和测试集数据
-    X_train, X_test, y_train, y_test = data
+    x_train, x_test, y_train, y_test = data
     
     clf = naive_bayes.GaussianNB()
     clf = DecisionTreeRegressor(criterion="mse", max_depth=5)
-    clf.fit(X_train, y_train)
-    print("bayes:training score:{:.4f}".format(clf.score(X_train, y_train)))
-    print("bayes:testing score:{:.4f}".format(clf.score(X_test, y_test)))
+    clf.fit(x_train, y_train)
+    print("training score:{:.4f}".format(clf.score(x_train, y_train)))
+    print("testing score:{:.4f}".format(clf.score(x_test, y_test)))
     # ????
+
+    '''
     bayes_train_pre = clf.predict_proba(X_train)[:,1]
     bayes_test_pre = clf.predict_proba(X_test)[:,1]
    
@@ -155,3 +157,37 @@ def test_bayes(*data):
     auc_test = roc_auc_score(y_test,bayes_test_pre)
     print("auc_train:", auc_train)
     print("auc_test:",auc_test)
+    '''
+
+    model=LinearRegression()
+    model.fit(x_train,y_train)
+    yhat = model.predict(x_test)
+    print(yhat)
+    print("testing score{}".format(model.score(x_test,y_test)))
+    
+    return model
+
+def make_x_list(r,round,player,player_RP_before,player_RP_after):
+    list3=[r,round,player,player_RP_before,player_RP_after]
+    for row in lists[0]:
+        for item in row:
+            list3.append(item)
+    for row in lists[1]:
+        for item in row:
+            list3.append(item)
+    for row in lists[2]:
+        for item in row:
+            list3.append(item)
+    for row in lists[3]:
+        for item in row:
+            list3.append(item)
+    for row in lists[4]:
+        for item in row:
+            list3.append(item)
+    for row in lists[5]:
+        for item in row:
+            list3.append(item)
+    for row in lists[6]:
+        for item in row:
+            list3.append(item) 
+    return list3

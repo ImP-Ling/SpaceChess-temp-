@@ -16,8 +16,11 @@ class Grid:
     '''
     def __init__(self):
         self.display=pygame.display.set_mode((1500,1024))
+        pygame.display.set_caption("Space Chess")
+        icon=pygame.image.load("ships/E-ship.png")
+        pygame.display.set_icon(icon)
         self.surface=pygame.Surface((1024,1024))
-        self.draw_grid()
+        self.welcome()
         self.display.blit(self.surface,(0,0))
         self.all_ships=[]
     
@@ -34,6 +37,10 @@ class Grid:
     def Y_to_y(self,y):
         Y=64-int((y+1)/16)
         return Y
+    def welcome(self):
+        image=pygame.image.load("welcome.png")
+        self.surface.blit(image,(0,0))
+
 
     def draw_grid(self):
         self.surface.fill((255,255,255))
@@ -123,7 +130,9 @@ class Grid:
                     pygame.display.update()
                     i=i+1
         self.all_ships.remove(ship2)
-        player.ships.remove(ship2)
+        if ship2.val!=6:           
+            player.ships.remove(ship2)
+        self.refresh()
 
     def EMP(self,ship):
         i=0
@@ -331,5 +340,112 @@ class Menu:
         
         return self.buttons 
 
+    def in_game_single_player(self,player0,player1,this_round,chosen=None,count=0):
+        self.display.blit(self.surface,(1024,0))
+        text1=self.font1.render('Space Chess -- Single Player',True,(0,0,0))
+        self.display.blit(text1,(1050,30))
+        text2=self.font2.render(" How to play? .",True,(255,0,0))
+        self.display.blit(text2,(1050,70))
+        text2=self.font2.render( '   First, click one of your ships or a ship you want to deploy.',True,(0,0,0))
+        self.display.blit(text2,(1050,90))
+        text2=self.font2.render('   Secondly, choose a function like moving or attack',True,(0,0,0))
+        self.display.blit(text2,(1050,110))
+        text2=self.font2.render('   Thirdly, choose a target.',True,(0,0,0))
+        self.display.blit(text2,(1050,130))
+        pygame.display.update()
+
+        #displaying RP
+        text3=self.font3.render('Resource Points',True,(255,0,0))
+        self.display.blit(text3,(1050,160))
+        text3=self.font3.render('  Player 0: {0}'.format(player0.RP),True,(0,0,0))
+        self.display.blit(text3,(1050,185))
+        text3=self.font3.render('  Player 1: {0}'.format(player1.RP),True,(0,0,0))
+        self.display.blit(text3,(1050,210))
+        text3=self.font3.render('  Count:{}'.format(count),True,(0,0,0))
+        self.display.blit(text3,(1300,250))
+        pygame.display.update()
+
+
+        #buttons
+        self.undo=Input.Button("--Undo--",(0,0,0),1050,245,self.display)
+        self.undo.display()
+        self.attack=Input.Button("--Attack--",self.attack_color,1050,280,self.display)
+        self.attack.display()
+        self.move=Input.Button("--Move--",self.move_color,1050,315,self.display)
+        self.move.display()
+
+        #Deploy
+        text4=self.font2.render('Deploy Ships: ( click the icon to choose )',True,(255,0,0))
+        self.display.blit(text4,(1050,350))
+        text4=self.font2.render('Torpedos: D:100,M:5,W:10, 10/15',True,self.torpedo_color)
+        self.display.blit(text4,(1050,370))
+        self.torpedo=Input.Image('ships/Torpedo.png',1300,370,self.display)
+        self.torpedo.display()
+        text4=self.font2.render('Destroyers: D:500,M:20,W:50, 25/40',True,self.destroyer_color)
+        self.display.blit(text4,(1050,410))
+        self.destroyer=Input.Image('ships/Destroyer.png',1300,410,self.display)
+        self.destroyer.display()
+        text4=self.font2.render('Cruisers: D:1000,M:50,W:100, 50/100',True,self.cruiser_color)
+        self.display.blit(text4,(1050,450))
+        self.cruiser=Input.Image('ships/Cruiser.png',1300,450,self.display)
+        self.cruiser.display()
+        text4=self.font2.render('Carriers: D:5000,M:100,W:100, 50/150',True,self.carrier_color)
+        self.display.blit(text4,(1050,520))
+        self.carrier=Input.Image('ships/Carrier.png',1300,520,self.display)
+        self.carrier.display()
+        text4=self.font2.render('E-ships: D:5000,M:50,W:100, 50/80',True,self.eship_color)
+        self.display.blit(text4,(1050,590))
+        self.eship=Input.Image('ships/E-ship.png',1300,590,self.display)
+        self.eship.display()
+
+        #choose armour and weapon
+        text4=self.font2.render('Choose Armour and Weapon:',True,(255,0,0))
+        self.display.blit(text4,(1050,630))
+        self.laser=Input.Button("--Laser--",self.laser_color,1050,650,self.display)
+        self.laser.display()
+        self.railgun=Input.Button("--Railgun--",self.railgun_color,1200,650,self.display)
+        self.railgun.display()
+        self.energy=Input.Button("--Energy--",self.energy_color,1050,690,self.display)
+        self.energy.display()
+        self.hard=Input.Button("--Hard--",self.hard_color,1200,690,self.display)
+        self.hard.display()
+        self.deploy=Input.Button("--Deploy!--",self.deploy_color,1125,730,self.display)
+        self.deploy.display()
+
+        #extras
+        self.special=Input.Button("--Special--",self.special_color,1200,245,self.display)
+        self.special.display()
+        self.finish=Input.Button("--Finish Round--",(255,0,0),1200,280,self.display)
+        self.finish.display()
+        text1=self.font1.render('Player {0}'.format(this_round),True,(0,0,0))
+        self.display.blit(text1,(1300,190))
+
+        #displays ships
+        if chosen!=None:
+            text4=self.font2.render('Chosen Ship:   {0}'.format(chosen),True,(255,0,0))
+            self.display.blit(text4,(1050,780))
+            text4=self.font2.render('  Damage: {0}'.format(chosen.damage),True,(0,0,0))
+            self.display.blit(text4,(1050,810))
+            text4=self.font2.render('  Health: {0}'.format(chosen.health),True,(0,0,0))
+            self.display.blit(text4,(1050,840))
+            text4=self.font2.render('  Armour: {0}'.format(chosen.armour_type),True,(0,0,0))
+            self.display.blit(text4,(1050,870))
+            text4=self.font2.render('  Weapon: {0}'.format(chosen.weapon_type),True,(0,0,0))
+            self.display.blit(text4,(1050,900))
+            pygame.display.update()
+            #input()
+        pygame.display.update()
+        self.buttons=[self.undo,self.attack,self.deploy,self.move,self.torpedo,self.destroyer,self.cruiser,self.carrier,self.eship,self.laser,self.railgun,self.energy,self.hard,self.deploy,self.special,self.finish]
 
         
+        return self.buttons 
+
+    def game_ends(self,p,r):
+        self.display.blit(self.surface,(1024,0))
+        text1=self.font1.render('Space Chess -- Game Ends',True,(0,0,0))
+        self.display.blit(text1,(1050,30))
+        text1=self.font1.render('Player {0} wins'.format(p),True,(0,0,0))
+        self.display.blit(text1,(1050,70))
+        text1=self.font1.render('Rounds {0}'.format(r),True,(0,0,0))
+        self.display.blit(text1,(1050,210))
+        pygame.display.update()
