@@ -62,6 +62,7 @@ class Grid:
         pygame.draw.line(self.surface,(255,0,0),(0,16*53),(1023,16*53))
 
     def draw_and_create_base(self):
+        self.draw_grid()
         player0_base=Ships.Base(self,0,0,0)
         player1_base=Ships.Base(self,0,0,1)
         self.all_ships.append(player0_base)
